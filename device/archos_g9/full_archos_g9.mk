@@ -29,7 +29,7 @@ endif
 PRODUCT_COPY_FILES := \
        	$(LOCAL_KERNEL):kernel \
        	$(DEVICE_PREBUILT)/root/init.dongle.rc:root/init.dongle.rc \
-       	$(DEVICE_PREBUILT)/root/init.rc:root/init.rc \
+       	$(DEVICE_PREBUILT)/root/init.rc:root/init.archos-ics.rc \
         
 
 # Modem Kernel Modules
