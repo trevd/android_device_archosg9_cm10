@@ -32,11 +32,12 @@ PRODUCT_COPY_FILES := \
     vendor/archos/archos_g9/proprietary/lib/libtiutils.so:/system/lib/libtiutils.so \
     vendor/archos/archos_g9/proprietary/lib/hw/audio.primary.archos.so:/system/lib/hw/audio.primary.archos.so \
     vendor/archos/archos_g9/proprietary/lib/hw/audio_policy.archos.so:/system/lib/hw/audio_policy.archos.so \
-    vendor/archos/archos_g9/proprietary/lib/hw/camera.omap4.so:/system/lib/hw/camera.omap4.so \
     vendor/archos/archos_g9/proprietary/lib/hw/gps.archos.so:/system/lib/hw/gps.archos.so \
     vendor/archos/archos_g9/proprietary/lib/hw/lights.archos.so:/system/lib/hw/lights.archos.so \
-    vendor/archos/archos_g9/proprietary/lib/hw/sensors.omap4.so:/system/lib/hw/sensors.omap4.so \
-    vendor/archos/archos_g9/proprietary/lib/libskia.so:/system/lib/libskia.so
+    vendor/archos/archos_g9/proprietary/lib/hw/sensors.omap4.so:/system/lib/hw/sensors.omap4.so 
+
+#    vendor/archos/archos_g9/proprietary/lib/hw/camera.omap4.so:/system/lib/hw/camera.omap4.so \
+#    vendor/archos/archos_g9/proprietary/lib/libskia.so:/system/lib/libskia.so
 
 # OMX Libraries for 512MB RAM Ducati binary
 PRODUCT_COPY_FILES += \

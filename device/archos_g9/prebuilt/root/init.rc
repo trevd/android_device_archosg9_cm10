@@ -20,7 +20,9 @@ sysclktz 0
     export ANDROID_DATA /data
     export ASEC_MOUNTPOINT /mnt/asec
     export LOOP_MOUNTPOINT /mnt/obb
-    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar
+#    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar
+    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar
+    
     export BT_FW_PATH /lib/firmware
 
     mount usbfs usbfs /proc/bus/usb devuid=1000,listuid=1000,busuid=1000
@@ -82,24 +84,30 @@ sysclktz 0
     write /proc/sys/kernel/randomize_va_space 2
 
 # Create cgroup mount points for process groups
-    mkdir /dev/cpuctl
+mkdir /dev/cpuctl
     mount cgroup none /dev/cpuctl cpu
-    chown system system /dev/cpuctl
-    chown system system /dev/cpuctl/tasks
-    chmod 0777 /dev/cpuctl/tasks
-    write /dev/cpuctl/cpu.shares 1024
-
-    mkdir /dev/cpuctl/fg_boost
-    chown system system /dev/cpuctl/fg_boost/tasks
-    chmod 0777 /dev/cpuctl/fg_boost/tasks
-    write /dev/cpuctl/fg_boost/cpu.shares 1024
-
-    mkdir /dev/cpuctl/bg_non_interactive
-    chown system system /dev/cpuctl/bg_non_interactive/tasks
-    chmod 0777 /dev/cpuctl/bg_non_interactive/tasks
-    # 5.0 %
-    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
-
+        chown system system /dev/cpuctl
+            chown system system /dev/cpuctl/tasks
+                chmod 0660 /dev/cpuctl/tasks
+                    write /dev/cpuctl/cpu.shares 1024
+                        write /dev/cpuctl/cpu.rt_runtime_us 950000
+                            write /dev/cpuctl/cpu.rt_period_us 1000000
+                            
+                                mkdir /dev/cpuctl/apps
+                                    chown system system /dev/cpuctl/apps/tasks
+                                        chmod 0666 /dev/cpuctl/apps/tasks
+                                            write /dev/cpuctl/apps/cpu.shares 1024
+                                                write /dev/cpuctl/apps/cpu.rt_runtime_us 800000
+                                                    write /dev/cpuctl/apps/cpu.rt_period_us 1000000
+                                                    
+                                                        mkdir /dev/cpuctl/apps/bg_non_interactive
+                                                            chown system system /dev/cpuctl/apps/bg_non_interactive/tasks
+                                                                chmod 0666 /dev/cpuctl/apps/bg_non_interactive/tasks
+                                                                    # 5.0 %
+                                                                        write /dev/cpuctl/apps/bg_non_interactive/cpu.shares 52
+                                                                            write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_runtime_us 700000
+                                                                                write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_period_us 1000000
+                                                                                
 # Allow everybody to read the xt_qtaguid resource tracking misc dev.
 # This is needed by any process that uses socket tagging.
     chmod 0644 /dev/xt_qtaguid
@@ -585,10 +593,11 @@ service netd /system/bin/netd
     class main
     socket netd stream 0660 root system
     socket dnsproxyd stream 0660 root inet
+socket mdns stream 0660 root system
 
-service sharesd /system/bin/sharesd
-    class main
-    socket sharesd stream 0660 root system
+#service sharesd /system/bin/sharesd
+#    class main
+#    socket sharesd stream 0660 root system
     
 service debuggerd /system/bin/debuggerd
     class main
@@ -695,3 +704,12 @@ service reboot /system/bin/reboot
 
 service nand /system/bin/nand /data/nand 1000 1015
     class main
+    
+    	service mdnsd /system/bin/mdnsd
+        class main
+    	   user mdnsr
+    	            group inet net_raw
+    	                socket mdnsd stream 0660 mdnsr inet
+    	                    disabled
+    	                        oneshot
+    	                        
