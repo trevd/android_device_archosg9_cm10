@@ -293,17 +293,17 @@ service hciattach /system/bin/hciattach -l
 #    disabled
 #    oneshot
     
-service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0
-    class main
-    socket wpa_wlan0 dgram 660 wifi wifi
-    disabled
-    oneshot
-
-#service wpa_supplicant /system/bin/wpa_supplicant -Dwlan0 -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf
+#service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0 -c /system/etc/wifi/wpa_supplicant.conf
 #    class main
 #    socket wpa_wlan0 dgram 660 wifi wifi
 #    disabled
 #    oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
     class main
